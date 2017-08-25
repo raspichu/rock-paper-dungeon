@@ -4,7 +4,15 @@ const app = express()
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
-const port = 3000
+const port = process.env.PORT || 8080;
+app.set('view engine', 'ejs');
+
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+app.use(express.static(__dirname + '/public'));
+
 const fileName = './files/map.txt'
 let file = fs.readFileSync(fileName, 'utf8')
 var idUser = 1;
@@ -15,12 +23,6 @@ let intervalToSaveTheMap = setInterval(function () {
     console.log('--------------------- Guardando estado ------------------')
     fs.writeFileSync(fileName, JSON.stringify(map));
 }, 1000*60);
-
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(bodyParser.json());
-app.use(express.static('public'))
 
 app.listen(port, (err) => {
     if (err) {
