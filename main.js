@@ -76,8 +76,8 @@ function findPlayers(position){
 }
 
 function randomPosInit(user) {
-    let x = Math.floor(Math.random() * 10);
-    let y = Math.floor(Math.random() * 10);
+    let x = Math.floor(Math.random() * 1000);
+    let y = Math.floor(Math.random() * 1000);
     let obj = { x: x, y: y }
     if (!map[po(obj)]) {
         map[po(obj)] = {done:true}
