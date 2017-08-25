@@ -4,7 +4,8 @@
   "description": "A dungeon with rock paper scissors game multiplayer",
   "main": "main.js",
   "scripts": {
-    "test": "node main.js"
+    "test": "node main.js",
+	"start": "node main.js"
   },
   "author": "Denís Couñago",
   "license": "ISC",
