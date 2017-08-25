@@ -1,0 +1,62 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="layout-container layout-sidebar-l3-md-up ls-top">
+        <div class="layout-content" id="main-scroll" data-scrollable>
+            <div class="container-fluid">
+                <div id="mainContent">
+                    <div>
+                        <div>
+                            <center>
+                                <h1>Rock Paper Dungeon.</h1>
+                                <div>
+                                    <button class="btn btn-primary" onclick="move('up')">Up</button>
+                                    <div>
+                                        <button class="btn btn-primary" onclick="move('left')">Left</button>
+                                        <button class="btn btn-primary" onclick="move('down')">Down</button>
+                                        <button class="btn btn-primary" onclick="move('right')">Right</button>
+                                    </div>
+                                </div>
+                                <br>
+                                <div id="hp"></div>
+                                <div id="message">
+
+                                </div>
+                                <div id="combat" >
+                                    <button class="btn btn-default" onclick="attack('Roca')">Roca</button>
+                                    <button class="btn btn-default" onclick="attack('Papel')">Papel</button>
+                                    <button class="btn btn-default" onclick="attack('Tijeras')">Tijeras</button>
+                                </div>
+                                <br>
+                                <center><div style="display:none;" id="error" class="col-md-offset-5 col-md-2 col-lg-offset-5 col-lg-2 alert alert-danger"></div></center>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="./js/javascript.js"></script>
+</body>
+
+</html>

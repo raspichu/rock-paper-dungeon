@@ -1,0 +1,15 @@
+{
+  "name": "rock-paper-dungeon",
+  "version": "1.0.0",
+  "description": "A dungeon with rock paper scissors game multiplayer",
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.js"
+  },
+  "author": "Denís Couñago",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4"
+  }
+}
