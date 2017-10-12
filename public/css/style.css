@@ -1,3 +1,18 @@
 * {
     font-family: Montserrat;
 }
+#showingMap{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+.box{
+    width:20px;
+    height: 20px;
+    border:1px solid #F7E6E6;
+}
+.showBox{
+    width:20px;
+    height: 20px;
+    border:1px solid black;
+}

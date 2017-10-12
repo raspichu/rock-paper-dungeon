@@ -17,12 +17,12 @@ const fileName = './files/map.txt'
 let file = fs.readFileSync(fileName, 'utf8')
 var idUser = 1;
 var users = {};
-var map = (file)?JSON.parse(file):{};
+var map = (file) ? JSON.parse(file) : {};
 
 let intervalToSaveTheMap = setInterval(function () {
     console.log('--------------------- Guardando estado ------------------')
     fs.writeFileSync(fileName, JSON.stringify(map));
-}, 1000*60);
+}, 1000 * 60);
 
 app.listen(port, (err) => {
     if (err) {
@@ -33,7 +33,7 @@ app.listen(port, (err) => {
 app.get('/start', (req, res) => {
     let obj = randomPosInit(idUser)
     let usr = { position: obj.pos, id: idUser };
-    res.send({ position: usr.position, id: usr.id, map: obj.map, encounter: obj.encounter });
+    res.send({ position: usr.position, id: usr.id, map: obj.map, encounter: obj.encounter, fullMap: map });
     idUser++;
     users[usr.id] = usr;
     console.log(`Jugador ${usr.id} empezando en la posicion: x:${usr.position.x} y:${usr.position.y}`);
@@ -43,7 +43,7 @@ app.post('/move', (req, res) => {
         let tomove = move(users[req.body.id].position, req.body.direction, req.body.id);
         console.log(`Moviendo jugador ${req.body.id} - Antes:${users[req.body.id].position.x}:${users[req.body.id].position.y} Ahora:${tomove.pos.x}:${tomove.pos.y}`)
         users[req.body.id].position = tomove.pos
-        res.send({ position: tomove.pos, map: tomove.map, encounter: tomove.encounter });
+        res.send({ position: tomove.pos, map: tomove.map, encounter: tomove.encounter, fullMap: map });
     } else {
         res.end();
     }
@@ -65,10 +65,10 @@ app.post('/fight', (req, res) => {
     }
 })
 
-function findPlayers(position){
+function findPlayers(position) {
     let final = [];
-    for (let index in users){
-        if (users[index].position.x == position.x && users[index].position.y == position.y){
+    for (let index in users) {
+        if (users[index].position.x == position.x && users[index].position.y == position.y) {
             final.push(index);
         }
     }
@@ -80,7 +80,7 @@ function randomPosInit(user) {
     let y = Math.floor(Math.random() * 1000);
     let obj = { x: x, y: y }
     if (!map[po(obj)]) {
-        map[po(obj)] = {done:true}
+        map[po(obj)] = { done: true }
     }
     return { map: map[po(obj)], pos: obj, encounter: { mess: 'Bienvenido al inicio' } };
 }
@@ -98,14 +98,14 @@ function move(position, direction, user) {
     }
     if (!map[po(post)]) {
         encounter = encounterEmpty();
-        map[po(post)] = {done:false};
+        map[po(post)] = { done: false };
     } else {
         let numPlayer = findPlayers(post).length;
         if (numPlayer) {
-            if (numPlayer==1){
-            encounter.mess = '¡Te has encontrado con otro usuario!';
+            if (numPlayer == 1) {
+                encounter.mess = '¡Te has encontrado con otro usuario!';
             } else {
-            encounter.mess = '¡Te has encontrado con '+numPlayer+' usuarios!';
+                encounter.mess = '¡Te has encontrado con ' + numPlayer + ' usuarios!';
             }
         } else {
             if (map[po(post)].done) {
