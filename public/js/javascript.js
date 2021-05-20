@@ -3,7 +3,7 @@ var map = {};
 $(document).ready(function () {
     $.ajax({
         type: "GET",
-        url: '/start',
+        url: './start',
         data: null,
         success: function (val) {
             if (val) {
@@ -82,7 +82,7 @@ function move(direction) {
         if (!onCombat) {
             $.ajax({
                 type: "POST",
-                url: '/move',
+                url: './move',
                 data: { id: id, direction: direction },
                 success: function (val) {
                     position = val.position;
@@ -140,7 +140,7 @@ function attack(action) {
     if (onCombat) {
         $.ajax({
             type: "POST",
-            url: '/fight',
+            url: './fight',
             data: { id: id, action: action },
             success: function (val) {
                 if (val.result) {
