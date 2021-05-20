@@ -18,9 +18,9 @@ $(document).ready(function () {
     });
     $(document).keyup(function (e) {
         switch (e.keyCode) {
-            case 74: attack('Roca'); break;
-            case 75: attack('Papel'); break;
-            case 76: attack('Tijeras'); break;
+            case 74: attack('Rock'); break;
+            case 75: attack('Paper'); break;
+            case 76: attack('Scissors'); break;
             case 37: // Left
             case 65: // A
                 move('left');
@@ -93,7 +93,7 @@ function move(direction) {
             });
 
         } else {
-            $('#error').html('No puedes moverte en combate');
+            $('#error').html('You cannot move in combat');
             $('#error').stop();
             $('#error').fadeIn('fast', function () {
                 setTimeout(function () {
@@ -104,7 +104,7 @@ function move(direction) {
             })
         }
     } else {
-        console.log('No hay id o posición', id, position);
+        console.log('Id or position not found', id, position);
     }
 }
 function drawHP() {
@@ -120,7 +120,7 @@ function drawPos(value) {
         onCombat = true;
         $('#combat').css('display', '');
         // map[stringPos(position)] = 'combat';
-        console.log('Pelea!')
+        console.log('Fight!');
     } else {
         if (value.encounter && value.encounter.object) {
             hp++;
@@ -145,9 +145,9 @@ function attack(action) {
             success: function (val) {
                 if (val.result) {
                     $('#message').html('<div>X:' + position.x + ' Y:' + position.y + '</div>' +
-                        '<div>Enemigo: ' + val.result.enemy + ' - Tú: ' + val.result.player + '</div>' +
+                        '<div>Enemy: ' + val.result.enemy + ' - You: ' + val.result.player + '</div>' +
                         '<div>' +
-                        ((val.result.winner == 'player') ? '¡Ganaste!' : (val.result.winner == 'enemy') ? '¡Perdiste!' : 'Empate') +
+                        ((val.result.winner == 'player') ? 'You win!' : (val.result.winner == 'enemy') ? 'You lost!' : 'Tie') +
                         '</div>'
                     );
                     if (val.result.winner && val.result.winner == 'player') {

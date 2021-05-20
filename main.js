@@ -4,7 +4,7 @@ const app = express()
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8006;
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({
@@ -13,41 +13,41 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 
-const fileName = './files/map.txt'
-let file = fs.readFileSync(fileName, 'utf8')
+const fileName = './files/map.txt';
+let file = fs.readFileSync(fileName, 'utf8');
 var idUser = 1;
 var users = {};
 var map = (file) ? JSON.parse(file) : {};
 
 let intervalToSaveTheMap = setInterval(function () {
-    console.log('--------------------- Guardando estado ------------------')
+    console.log('--------------------- Saving state ------------------')
     fs.writeFileSync(fileName, JSON.stringify(map));
 }, 1000 * 60);
 
 app.listen(port, (err) => {
     if (err) {
-        return console.log('something bad happened', err)
+        return console.log('something bad happened', err);
     }
-    console.log('server is listening on ' + port)
-})
+    console.log('server is listening on ' + port);
+});
 app.get('/start', (req, res) => {
     let obj = randomPosInit(idUser)
     let usr = { position: obj.pos, id: idUser };
     res.send({ position: usr.position, id: usr.id, map: obj.map, encounter: obj.encounter, fullMap: map });
     idUser++;
     users[usr.id] = usr;
-    console.log(`Jugador ${usr.id} empezando en la posicion: x:${usr.position.x} y:${usr.position.y}`);
-})
+    console.log(`Player ${usr.id} staring in position: x:${usr.position.x} y:${usr.position.y}`);
+});
 app.post('/move', (req, res) => {
     if (req.body && req.body.id && req.body.direction && users[req.body.id]) {
         let tomove = move(users[req.body.id].position, req.body.direction, req.body.id);
-        console.log(`Moviendo jugador ${req.body.id} - Antes:${users[req.body.id].position.x}:${users[req.body.id].position.y} Ahora:${tomove.pos.x}:${tomove.pos.y}`)
-        users[req.body.id].position = tomove.pos
+        console.log(`Moving player ${req.body.id} - Before:${users[req.body.id].position.x}:${users[req.body.id].position.y} Now:${tomove.pos.x}:${tomove.pos.y}`)
+        users[req.body.id].position = tomove.pos;
         res.send({ position: tomove.pos, map: tomove.map, encounter: tomove.encounter, fullMap: map });
     } else {
         res.end();
     }
-})
+});
 app.post('/fight', (req, res) => {
     if (req.body && req.body.id && req.body.action) {
         // users[req.body.id].position = tomove
@@ -57,13 +57,13 @@ app.post('/fight', (req, res) => {
         if (result.error) {
             res.send({ error: result.error });
         } else {
-            res.send({ result: result })
+            res.send({ result: result });
         }
-        console.log(`Jugador ${req.body.id} luchando - Jugador:${req.body.action} Enemigo:${enact} - Resultado: ${result.winner}`)
+        console.log(`Player ${req.body.id} fighting - Player:${req.body.action} Enemy:${enact} - result: ${result.winner}`);
     } else {
         res.end();
     }
-})
+});
 
 function findPlayers(position) {
     let final = [];
@@ -78,15 +78,15 @@ function findPlayers(position) {
 function randomPosInit(user) {
     let x = Math.floor(Math.random() * 1000);
     let y = Math.floor(Math.random() * 1000);
-    let obj = { x: x, y: y }
+    let obj = { x: x, y: y };
     if (!map[po(obj)]) {
-        map[po(obj)] = { done: true }
+        map[po(obj)] = { done: true };
     }
-    return { map: map[po(obj)], pos: obj, encounter: { mess: 'Bienvenido al inicio' } };
+    return { map: map[po(obj)], pos: obj, encounter: { mess: 'Back to home' } };
 }
 function move(position, direction, user) {
     let post = { x: position.x, y: position.y };
-    let encounter = { mess: '' }
+    let encounter = { mess: '' };
     switch (direction) {
         case 'left': post.x = post.x - 1; break;
         case 'right': post.x = post.x + 1; break;
@@ -103,13 +103,13 @@ function move(position, direction, user) {
         let numPlayer = findPlayers(post).length;
         if (numPlayer) {
             if (numPlayer == 1) {
-                encounter.mess = '¡Te has encontrado con otro usuario!';
+                encounter.mess = 'There is another user here!';
             } else {
-                encounter.mess = '¡Te has encontrado con ' + numPlayer + ' usuarios!';
+                encounter.mess = 'There are' + numPlayer + ' players here!';
             }
         } else {
             if (map[po(post)].done) {
-                encounter.mess = 'Ya ha pasado alguien por aquí';
+                encounter.mess = 'Another player has already passed by here';
             }
         }
     }
@@ -121,33 +121,30 @@ function po(position) {
 function encounterEmpty() {
     let ram = Math.floor(Math.random() * 5000);
     if (ram < 10) {
-        return { mess: '¡Te has encontrado el boss final!', fight: true }
+        return { mess: 'You met the final boss!', fight: true };
     } else if (ram < 200) {
-        return { mess: '¡Te has encontrado un objeto, recuperas vida!', object: true }
+        return { mess: 'You have found an object, you recover life!', object: true };
     } else if (ram < 500) {
-        return { mess: '¡Te has encontrado un enemigo!', fight: true, enemy: createEnemy() }
+        return { mess: 'You found an enemy!', fight: true, enemy: createEnemy() };
     } else if (ram < 1000) {
-        return { mess: 'No pasa nada' }
+        return { mess: 'Nothing happens' };
     } else if (ram < 2000) {
-        return { mess: 'No pasa nada' }
+        return { mess: 'Nothing happens' };
     } else if (ram < 5000) {
-        return { mess: 'No pasa nada' }
+        return { mess: 'Nothing happens' };
     } else {
-        return { mess: 'Esto no deberia salir' }
+        return { mess: 'This should not come out' };
     }
 }
 function ActionForEnemy() {
     let ram = Math.floor(Math.random() * 3) + 1;
     switch (ram) {
         case 1:
-            return 'Roca';
-            break;
+            return 'Rock';
         case 2:
-            return 'Papel';
-            break;
+            return 'Paper';
         case 3:
-            return 'Tijeras';
-            break;
+            return 'Scissors';
         default:
             return false;
     }
@@ -156,15 +153,15 @@ function createEnemy() {
     let ram = Math.floor(Math.random() * 5000);
     let enm = {
         name: 'Slime',
-    }
+    };
     if (ram < 10) {
-        enm.name = 'Gigantón gigante';
+        enm.name = 'Really Big guy';
     } else if (ram < 100) {
-        enm.name = 'Jefe bandido';
+        enm.name = 'Bandit boss';
     } else if (ram < 500) {
-        enm.name = 'Soldado';
+        enm.name = 'Soldier';
     } else if (ram < 1000) {
-        enm.name = 'Bandido';
+        enm.name = 'Bandit';
     } else if (ram < 2000) {
         enm.name = 'Goblin';
     }
@@ -181,29 +178,30 @@ function fightComp(playerAction, enemyAction) {
         return win;
     }
     switch (playerAction) {
-        case 'Roca':
-            if (enemyAction == 'Papel') {
+        case 'Rock':
+            if (enemyAction == 'Paper') {
                 win.winner = 'enemy';
-            } else if (enemyAction == 'Tijeras') {
+            } else if (enemyAction == 'Scissors') {
                 win.winner = 'player';
             }
             break;
-        case 'Papel':
-            if (enemyAction == 'Tijeras') {
+        case 'Paper':
+            if (enemyAction == 'Scissors') {
                 win.winner = 'enemy';
-            } else if (enemyAction == 'Roca') {
+            } else if (enemyAction == 'Rock') {
                 win.winner = 'player';
             }
             break;
-        case 'Tijeras':
-            if (enemyAction == 'Roca') {
+        case 'Scissors':
+            if (enemyAction == 'Rock') {
                 win.winner = 'enemy';
-            } else if (enemyAction == 'Papel') {
+            } else if (enemyAction == 'Paper') {
                 win.winner = 'player';
             }
             break;
         default:
-            win.winner = false, win.error = 'Invadil move'
+            win.winner = false;
+            win.error = "Invalid move";
     }
     return win;
 }
